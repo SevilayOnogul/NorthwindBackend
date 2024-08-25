@@ -16,9 +16,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
+
         public IActionResult GetList()
         {
-           var result=_categoryService.GetList();
+            //Thread.Sleep(millisecondsTimeout: 5000);
+
+            var result =_categoryService.GetList();
             if(result.Success)
             {
                 return Ok(result.Data);

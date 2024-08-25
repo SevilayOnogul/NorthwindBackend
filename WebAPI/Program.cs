@@ -1,6 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Security.Encyption;
 using Core.Utilities.Security.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +20,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
    
     containerBuilder.RegisterModule(new AutofacBusinessModule());
 });
-
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -41,6 +43,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddDependencyResolvers(new ICoreModule[]
+{
+    new CoreModule()
+}) ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -53,6 +59,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.ConfigureCustomExceptionMiddleware();
 app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader());
 
 app.UseHttpsRedirection();

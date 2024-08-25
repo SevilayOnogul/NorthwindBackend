@@ -20,7 +20,9 @@ namespace Business.Concrete
         }
         public IDataResult<List<Category>> GetList()
         {
-         return new SuccessDataResult<List<Category>>(_categoryDal.GetList().ToList());
+            Thread.Sleep(millisecondsTimeout: 5000);
+
+            return new SuccessDataResult<List<Category>>(_categoryDal.GetList().ToList());
         }
     }
 }

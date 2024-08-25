@@ -1,8 +1,13 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Extensions;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace WebAPI.Controllers
 {
@@ -18,9 +23,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        [Authorize(Roles ="Product.List")]
+        //[Authorize(Roles = "Product.List")]
         public IActionResult GetList()
         {
+
             var result = _productService.GetList();
             if (result.Success)
             {
@@ -79,6 +85,17 @@ namespace WebAPI.Controllers
         public IActionResult Update(Product product)
         {
             var result = _productService.Update(product);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost("transaction")]
+        public IActionResult TransactionTest(Product product)
+        {
+            var result = _productService.TransactionOperation(product);
             if (result.Success)
             {
                 return Ok(result.Message);
